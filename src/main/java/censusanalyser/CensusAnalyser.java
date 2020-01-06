@@ -27,6 +27,8 @@ public class CensusAnalyser {
         } catch (IllegalArgumentException e){
             throw  new CensusAnalyserException(e.getMessage(),
                     CensusAnalyserException.ExceptionType.UNABLE_TO_PARSE);
+        }catch (RuntimeException e){
+            throw new CensusAnalyserException(e.getMessage(),CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
         }
     }
 }
