@@ -13,7 +13,7 @@ import java.util.stream.StreamSupport;
 public class CensusAnalyser {
     public int loadIndiaCensusData(String csvFilePath) throws CensusAnalyserException {
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
-            Iterator<IndiaCensusCSV> censusCSVIterator = this.getCSVIterator(reader, IndiaCensusCSV.class);
+            Iterator<IndiaCensusCSV> censusCSVIterator = new OpenCsvBuilder().getCSVIterator(reader, IndiaCensusCSV.class);
             return getCount(censusCSVIterator);
         } catch (IOException e) {
             throw new CensusAnalyserException(e.getMessage(),
@@ -25,7 +25,7 @@ public class CensusAnalyser {
 
     public int loadIndiaStateCodeData(String csvFilePath) throws CensusAnalyserException {
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
-            Iterator<IndiaSateCodeCSV> SateCodeCSVIterator = this.getCSVIterator(reader, IndiaSateCodeCSV.class);
+            Iterator<IndiaSateCodeCSV> SateCodeCSVIterator = new OpenCsvBuilder().getCSVIterator(reader, IndiaSateCodeCSV.class);
             return getCount(SateCodeCSVIterator);
         } catch (IOException e) {
             throw new CensusAnalyserException(e.getMessage(),
@@ -39,19 +39,6 @@ public class CensusAnalyser {
         Iterable<E> CSVIterable = () -> CSVIterator;
         int NumberOfRecords = (int) StreamSupport.stream(CSVIterable.spliterator(), false).count();
         return NumberOfRecords;
-    }
-
-    private <E> Iterator<E> getCSVIterator(Reader reader, Class csvClass) throws CensusAnalyserException {
-        try {
-            CsvToBeanBuilder<E> csvToBeanBuilder = new CsvToBeanBuilder<>(reader);
-            csvToBeanBuilder.withType(csvClass);
-            csvToBeanBuilder.withIgnoreLeadingWhiteSpace(true);
-            CsvToBean<E> csvToBean = csvToBeanBuilder.build();
-            return csvToBean.iterator();
-        } catch (IllegalArgumentException e) {
-            throw new CensusAnalyserException(e.getMessage(), CensusAnalyserException.ExceptionType.UNABLE_TO_PARSE);
-        }
-
     }
 }
 
