@@ -82,7 +82,7 @@ public class CensusAnalyser {
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
             ICSVBuilder csvBuilder = CsvBuilderFactory.createCSVBuilder();
             Iterator<IndiaCensusCSV>  censusCSVIterator = csvBuilder.getCSVIterator(reader, IndiaCensusCSV.class);
-            return Sort(censusCSVIterator);
+            return SortData(censusCSVIterator);
         } catch (IOException e) {
             throw new CensusAnalyserException(e.getMessage(),
                     CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
@@ -93,7 +93,7 @@ public class CensusAnalyser {
         }
     }
 
-    private JsonArray Sort(Iterator<IndiaCensusCSV> censusCSVIterator) {
+    private JsonArray SortData(Iterator<IndiaCensusCSV> censusCSVIterator) {
         Iterator<IndiaCensusCSV> csv = censusCSVIterator;
         ArrayList list = new ArrayList();
             while (csv.hasNext()) {
@@ -111,17 +111,9 @@ public class CensusAnalyser {
                         }
                     }
                 }
-        System.out.println(list);
-//              return list;
-//        Gson gson = new Gson();
-//        String json = gson.toJson(list);
-//        System.out.println(json);
-//        return json;
-//        JsonArray jsonArray = new JsonArray(list);
-          Gson gson = new GsonBuilder().create();
-          JsonArray jsonElements = gson.toJsonTree(list).getAsJsonArray();
-          System.out.println(jsonElements);
-          return jsonElements;
+                Gson gson = new GsonBuilder().create();
+                JsonArray jsonElements = gson.toJsonTree(list).getAsJsonArray();
+                return jsonElements;
     }
 }
 
