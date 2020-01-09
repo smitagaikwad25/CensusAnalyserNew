@@ -14,6 +14,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -21,8 +22,8 @@ public class CensusAnalyser {
     public int loadIndiaCensusData(String csvFilePath) throws CensusAnalyserException {
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
             ICSVBuilder csvBuilder = CsvBuilderFactory.createCSVBuilder();
-            Iterator<IndiaCensusCSV> censusCSVIterator = csvBuilder.getCSVIterator(reader, IndiaCensusCSV.class);
-            return getCount(censusCSVIterator);
+            List<IndiaCensusCSV> censusCSVIList = csvBuilder.getCSVList(reader, IndiaCensusCSV.class);
+            return censusCSVIList.size();
         } catch (IOException e) {
             throw new CensusAnalyserException(e.getMessage(),
                     CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
@@ -36,8 +37,8 @@ public class CensusAnalyser {
     public int loadIndiaStateCodeData(String csvFilePath) throws CensusAnalyserException {
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
             ICSVBuilder csvBuilder = CsvBuilderFactory.createCSVBuilder();
-            Iterator<IndiaSateCodeCSV> SateCodeCSVIterator = csvBuilder.getCSVIterator(reader, IndiaSateCodeCSV.class);
-            return getCount(SateCodeCSVIterator);
+            List<IndiaSateCodeCSV> SateCodeCSVList = csvBuilder.getCSVList(reader, IndiaSateCodeCSV.class);
+            return SateCodeCSVList.size();
         } catch (IOException e) {
             throw new CensusAnalyserException(e.getMessage(),
                     CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
@@ -48,11 +49,11 @@ public class CensusAnalyser {
         }
     }
 
-    private <E> int getCount(Iterator<E> CSVIterator) {
-        Iterable<E> CSVIterable = () -> CSVIterator;
-        int NumberOfRecords = (int) StreamSupport.stream(CSVIterable.spliterator(), false).count();
-        return NumberOfRecords;
-    }
+//    private <E> int getCount(Iterator<E> CSVIterator) {
+//        Iterable<E> CSVIterable = () -> CSVIterator;
+//        int NumberOfRecords = (int) StreamSupport.stream(CSVIterable.spliterator(), false).count();
+//        return NumberOfRecords;
+//    }
 
     public JsonArray SortDate(String csvFilePath) throws CensusAnalyserException {
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
