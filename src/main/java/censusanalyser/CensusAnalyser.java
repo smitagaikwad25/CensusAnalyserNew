@@ -12,7 +12,9 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 public class CensusAnalyser {
@@ -46,31 +48,6 @@ public class CensusAnalyser {
         }
     }
 
-//    public ArrayList SortIndiaStateCodeData(String csvFilePath) throws CensusAnalyserException {
-//        try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
-//            ICSVBuilder csvBuilder = CsvBuilderFactory.createCSVBuilder();
-//            Iterator<IndiaSateCodeCSV> SateCodeCSVIterator = csvBuilder.getCSVIterator(reader, IndiaSateCodeCSV.class);
-//            return getSortedData(SateCodeCSVIterator);
-//        } catch (IOException e) {
-//            throw new CensusAnalyserException(e.getMessage(),
-//                    CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
-//        } catch (RuntimeException e) {
-//            throw new CensusAnalyserException(e.getMessage(), CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
-//        }catch (CSVBuilderException e) {
-//            throw new CensusAnalyserException(e.getMessage(), e.type.name());
-//        }
-//    }
-//
-//    private ArrayList getSortedData(Iterator<IndiaSateCodeCSV> sateCodeCSVIterator) {
-//        ArrayList list = new ArrayList();
-//        list.add(sateCodeCSVIterator);
-//        while (sateCodeCSVIterator.hasNext())
-//        {
-//
-//        }
-//        return list;
-//    }
-
     private <E> int getCount(Iterator<E> CSVIterator) {
         Iterable<E> CSVIterable = () -> CSVIterator;
         int NumberOfRecords = (int) StreamSupport.stream(CSVIterable.spliterator(), false).count();
@@ -78,11 +55,10 @@ public class CensusAnalyser {
     }
 
     public JsonArray SortDate(String csvFilePath) throws CensusAnalyserException {
-
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
             ICSVBuilder csvBuilder = CsvBuilderFactory.createCSVBuilder();
             Iterator<IndiaCensusCSV>  censusCSVIterator = csvBuilder.getCSVIterator(reader, IndiaCensusCSV.class);
-            return SortData(censusCSVIterator);
+            return SortDataofCensunCSv(censusCSVIterator);
         } catch (IOException e) {
             throw new CensusAnalyserException(e.getMessage(),
                     CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
@@ -93,7 +69,7 @@ public class CensusAnalyser {
         }
     }
 
-    private JsonArray SortData(Iterator<IndiaCensusCSV> censusCSVIterator) {
+    private JsonArray SortDataofCensunCSv(Iterator<IndiaCensusCSV> censusCSVIterator) {
         Iterator<IndiaCensusCSV> csv = censusCSVIterator;
         ArrayList list = new ArrayList();
             while (csv.hasNext()) {
@@ -114,6 +90,34 @@ public class CensusAnalyser {
                 Gson gson = new GsonBuilder().create();
                 JsonArray jsonElements = gson.toJsonTree(list).getAsJsonArray();
                 return jsonElements;
+    }
+
+    public JsonArray SortSateCodeData(String csvFilePath) throws CensusAnalyserException {
+        try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
+            ICSVBuilder csvBuilder = CsvBuilderFactory.createCSVBuilder();
+            Iterator<IndiaSateCodeCSV>  SateCodeCSVIterator = csvBuilder.getCSVIterator(reader, IndiaSateCodeCSV .class);
+            return SortSateCode(SateCodeCSVIterator);
+        } catch (IOException e) {
+            throw new CensusAnalyserException(e.getMessage(),
+                    CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
+        } catch (RuntimeException e) {
+            throw new CensusAnalyserException(e.getMessage(), CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
+        } catch (CSVBuilderException e) {
+            throw new CensusAnalyserException(e.getMessage(), e.type.name());
+        }
+    }
+
+    private JsonArray SortSateCode(Iterator<IndiaSateCodeCSV> sateCodeCSVIterator) {
+        Iterator<IndiaSateCodeCSV> csv = sateCodeCSVIterator;
+        ArrayList list = new ArrayList();
+        while (csv.hasNext()) {
+            list.add(csv.next());
+        }
+        Object sortedSatecode = list.stream().sorted(Comparator.comparing(IndiaSateCodeCSV::getStateCode)).collect(Collectors.toList());
+        System.out.println(sortedSatecode);
+        Gson gson = new GsonBuilder().create();
+        JsonArray jsonElements = gson.toJsonTree(sortedSatecode).getAsJsonArray();
+        return jsonElements;
     }
 }
 

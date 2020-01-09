@@ -131,4 +131,27 @@ public class CensusAnalyserTest {
         }
      }
 
-}
+    @Test
+    public void givenIndiaCensus_WhenNotCorrect_ShouldReturnSortedOutPut() throws CensusAnalyserException {
+        try {
+            CensusAnalyser censusAnalyser = new CensusAnalyser();
+            censusAnalyser.SortDate(WRONG_CSV_FILE_PATH );
+        } catch (CensusAnalyserException e) {
+            Assert.assertEquals(CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM, e.type);
+        }
+        }
+
+    @Test
+    public void givenIndiaSateCode_WhenCorrect_ShouldReturnSortedOutPut() throws CensusAnalyserException {
+        try {
+            CensusAnalyser censusAnalyser = new CensusAnalyser();
+            JsonArray sortedOutput = censusAnalyser.SortSateCodeData(INDIA_STATE_CODE_CSV_FILE );
+            Assert.assertEquals(true, sortedOutput.get(0).toString().contains("Andhra Pradesh New"));
+        } catch(CensusAnalyserException e){
+            e.printStackTrace();
+        }
+    }
+
+
+    }
+
