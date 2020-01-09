@@ -4,8 +4,6 @@ import com.bridgeLab.CSVBuilderException;
 import com.bridgeLab.CsvBuilderFactory;
 import com.bridgeLab.ICSVBuilder;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -16,7 +14,6 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 public class CensusAnalyser {
     public int loadIndiaCensusData(String csvFilePath) throws CensusAnalyserException {
@@ -49,13 +46,7 @@ public class CensusAnalyser {
         }
     }
 
-//    private <E> int getCount(Iterator<E> CSVIterator) {
-//        Iterable<E> CSVIterable = () -> CSVIterator;
-//        int NumberOfRecords = (int) StreamSupport.stream(CSVIterable.spliterator(), false).count();
-//        return NumberOfRecords;
-//    }
-
-    public JsonArray SortDate(String csvFilePath) throws CensusAnalyserException {
+    public String SortDate(String csvFilePath) throws CensusAnalyserException {
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
             ICSVBuilder csvBuilder = CsvBuilderFactory.createCSVBuilder();
             Iterator<IndiaCensusCSV>  censusCSVIterator = csvBuilder.getCSVIterator(reader, IndiaCensusCSV.class);
@@ -70,30 +61,30 @@ public class CensusAnalyser {
         }
     }
 
-    private JsonArray SortDataofCensunCSv(Iterator<IndiaCensusCSV> censusCSVIterator) {
+    private String SortDataofCensunCSv(Iterator<IndiaCensusCSV> censusCSVIterator) {
         Iterator<IndiaCensusCSV> csv = censusCSVIterator;
-        ArrayList list = new ArrayList();
+        List<IndiaCensusCSV> list = new ArrayList();
             while (csv.hasNext()) {
-                list.add(csv.next().toString());
+                list.add(csv.next());
             }
-            String temp;
+            IndiaCensusCSV temp;
                 for (int i = 0; i < list.size(); i++) {
-                    String input1 = (String) list.get(i);
+                    IndiaCensusCSV input1 = list.get(i);
                     for (int j = 0; j < list.size() - 1; j++) {
-                        String input2 = (String) list.get(j);
-                        if (input1.compareTo(input2) < 0) {
-                            temp = (String) list.get(i);
+                        IndiaCensusCSV input2 = list.get(j);
+                        if (input1.state.compareTo(input2.state) < 0) {
+                            temp = list.get(i);
                            list.set(i,list.get(j));
                            list.set(j,temp);
                         }
                     }
                 }
-                Gson gson = new GsonBuilder().create();
-                JsonArray jsonElements = gson.toJsonTree(list).getAsJsonArray();
-                return jsonElements;
+                String json = new Gson().toJson(list);
+                System.out.println(json);
+                return json;
     }
 
-    public JsonArray SortSateCodeData(String csvFilePath) throws CensusAnalyserException {
+    public String SortSateCodeData(String csvFilePath) throws CensusAnalyserException {
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
             ICSVBuilder csvBuilder = CsvBuilderFactory.createCSVBuilder();
             Iterator<IndiaSateCodeCSV>  SateCodeCSVIterator = csvBuilder.getCSVIterator(reader, IndiaSateCodeCSV .class);
@@ -108,7 +99,7 @@ public class CensusAnalyser {
         }
     }
 
-    private JsonArray SortSateCode(Iterator<IndiaSateCodeCSV> sateCodeCSVIterator) {
+    private String SortSateCode(Iterator<IndiaSateCodeCSV> sateCodeCSVIterator) {
         Iterator<IndiaSateCodeCSV> csv = sateCodeCSVIterator;
         ArrayList list = new ArrayList();
         while (csv.hasNext()) {
@@ -116,9 +107,9 @@ public class CensusAnalyser {
         }
         Object sortedSatecode = list.stream().sorted(Comparator.comparing(IndiaSateCodeCSV::getStateCode)).collect(Collectors.toList());
         System.out.println(sortedSatecode);
-        Gson gson = new GsonBuilder().create();
-        JsonArray jsonElements = gson.toJsonTree(sortedSatecode).getAsJsonArray();
-        return jsonElements;
+        String json = new Gson().toJson(sortedSatecode);
+        System.out.println(json);
+        return json;
     }
 }
 

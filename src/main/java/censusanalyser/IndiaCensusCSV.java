@@ -20,13 +20,13 @@ public class IndiaCensusCSV {
         return state;
     }
 
-    @Override
-    public String toString() {
-        return "IndiaCensusCSV{" +
-                "State='" + state + '\'' +
-                ", Population='" + population + '\'' +
-                ", AreaInSqKm='" + areaInSqKm + '\'' +
-                ", DensityPerSqKm='" + densityPerSqKm + '\'' +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "IndiaCensusCSV{" +
+//                "State='" + state + '\'' +
+//                ", Population='" + population + '\'' +
+//                ", AreaInSqKm='" + areaInSqKm + '\'' +
+//                ", DensityPerSqKm='" + densityPerSqKm + '\'' +
+//                '}';
+//    }
 }
