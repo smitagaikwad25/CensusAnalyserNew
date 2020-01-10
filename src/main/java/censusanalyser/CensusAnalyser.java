@@ -17,13 +17,23 @@ import java.util.stream.Collectors;
 
 public class CensusAnalyser {
 
-    List<IndiaCensusCSV> censusCSVIList = null;
-    List<IndiaSateCodeCSV> SateCodeCSVList = null;
+    List<IndiaCensusDAO> censusCSVIList = null;
+
+    public CensusAnalyser() {
+        this.censusCSVIList = new ArrayList<IndiaCensusDAO>();
+    }
+
+   List<IndiaSateCodeCSV> SateCodeCSVList = null;
     public int loadIndiaCensusData(String csvFilePath) throws CensusAnalyserException {
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
             ICSVBuilder csvBuilder = CsvBuilderFactory.createCSVBuilder();
-            censusCSVIList = csvBuilder.getCSVList(reader, IndiaCensusCSV.class);
-            return censusCSVIList.size();
+            List<IndiaCensusCSV> csvList = csvBuilder.getCSVList(reader, IndiaCensusCSV.class);
+            int i=0;
+             while (i < csvList.size()){
+                 this.censusCSVIList.add(new IndiaCensusDAO(csvList.get(i)));
+                 i++;
+             }
+             return censusCSVIList.size();
         } catch (IOException e) {
             throw new CensusAnalyserException(e.getMessage(),
                     CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
@@ -53,11 +63,11 @@ public class CensusAnalyser {
         if (censusCSVIList == null || censusCSVIList.size() == 0){
             throw new CensusAnalyserException("No Census Data",CensusAnalyserException.ExceptionType.No_Census_Data);
         }
-            IndiaCensusCSV temp;
+            IndiaCensusDAO temp;
                 for (int i = 0; i < censusCSVIList.size(); i++) {
-                    IndiaCensusCSV input1 = censusCSVIList.get(i);
+                    IndiaCensusDAO input1 = censusCSVIList.get(i);
                     for (int j = 0; j < censusCSVIList.size() - 1; j++) {
-                        IndiaCensusCSV input2 = censusCSVIList.get(j);
+                        IndiaCensusDAO input2 = censusCSVIList.get(j);
                         if (input1.state.compareTo(input2.state) < 0) {
                             temp = censusCSVIList.get(i);
                             censusCSVIList.set(i,censusCSVIList.get(j));
