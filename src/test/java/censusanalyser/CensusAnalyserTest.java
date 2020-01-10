@@ -1,13 +1,8 @@
 package censusanalyser;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
-import java.util.ArrayList;
-import java.util.Iterator;
 
 public class CensusAnalyserTest {
 

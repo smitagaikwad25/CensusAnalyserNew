@@ -11,7 +11,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,9 +20,11 @@ public class CensusAnalyser {
 
     public CensusAnalyser() {
         this.censusCSVIList = new ArrayList<IndiaCensusDAO>();
+        this.StateCodeCSVList = new ArrayList<IndiaStateCodeDAO>();
     }
 
-   List<IndiaSateCodeCSV> SateCodeCSVList = null;
+    List<IndiaStateCodeDAO> StateCodeCSVList = null;
+
     public int loadIndiaCensusData(String csvFilePath) throws CensusAnalyserException {
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
             ICSVBuilder csvBuilder = CsvBuilderFactory.createCSVBuilder();
@@ -47,8 +48,13 @@ public class CensusAnalyser {
     public int loadIndiaStateCodeData(String csvFilePath) throws CensusAnalyserException {
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
             ICSVBuilder csvBuilder = CsvBuilderFactory.createCSVBuilder();
-            SateCodeCSVList = csvBuilder.getCSVList(reader, IndiaSateCodeCSV.class);
-            return SateCodeCSVList.size();
+           List<IndiaSateCodeCSV> csvList = csvBuilder.getCSVList(reader, IndiaSateCodeCSV.class);
+           int i=0;
+           while (i< csvList.size()){
+               this.StateCodeCSVList.add(new IndiaStateCodeDAO(csvList.get(i)));
+               i++;
+           }
+           return StateCodeCSVList.size();
         } catch (IOException e) {
             throw new CensusAnalyserException(e.getMessage(),
                     CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
@@ -81,10 +87,10 @@ public class CensusAnalyser {
     }
 
     public String SortSateCode() throws CensusAnalyserException {
-        if (SateCodeCSVList == null || SateCodeCSVList .size() == 0){
+        if (StateCodeCSVList == null || StateCodeCSVList .size() == 0){
             throw new CensusAnalyserException("No Census Data",CensusAnalyserException.ExceptionType.No_Census_Data);
         }
-        Object sortedSatecode = SateCodeCSVList.stream().sorted(Comparator.comparing(IndiaSateCodeCSV::getStateCode)).collect(Collectors.toList());
+        List<IndiaStateCodeDAO> sortedSatecode = StateCodeCSVList.stream().sorted(Comparator.comparing(IndiaStateCodeDAO::getStateCode)).collect(Collectors.toList());
         System.out.println(sortedSatecode);
         String json = new Gson().toJson(sortedSatecode);
         System.out.println(json);
