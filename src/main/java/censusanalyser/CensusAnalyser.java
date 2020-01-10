@@ -96,6 +96,18 @@ public class CensusAnalyser {
         return json;
     }
 
+    public String SortCensusDataAccordingArea() throws CensusAnalyserException {
+        if (censusCSVIList == null || censusCSVIList.size() == 0){
+            throw new CensusAnalyserException("No Census Data",CensusAnalyserException.ExceptionType.No_Census_Data);
+        }
+        List<IndiaCensusDAO> SortingAreaWise = censusCSVIList.stream().sorted(Comparator.comparing(IndiaCensusDAO::getAreaInSqKm).reversed()).collect(Collectors.toList());
+        System.out.println(SortingAreaWise);
+        String json = new Gson().toJson(SortingAreaWise);
+        System.out.println(json);
+        return json;
+    }
+
+
     public String SortSateCode() throws CensusAnalyserException {
         if (StateCodeCSVList == null || StateCodeCSVList .size() == 0){
             throw new CensusAnalyserException("No Census Data",CensusAnalyserException.ExceptionType.No_Census_Data);
