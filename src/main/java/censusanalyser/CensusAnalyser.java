@@ -96,6 +96,17 @@ public class CensusAnalyser {
         System.out.println(json);
         return json;
     }
+
+    public String SortCensusDataAccordingPopulation() throws CensusAnalyserException {
+        if (censusCSVIList == null || censusCSVIList.size() == 0){
+            throw new CensusAnalyserException("No Census Data",CensusAnalyserException.ExceptionType.No_Census_Data);
+        }
+        List<IndiaCensusDAO> SortingPopulationWise = censusCSVIList.stream().sorted(Comparator.comparing(IndiaCensusDAO::getPopulation).reversed()).collect(Collectors.toList());
+        System.out.println(SortingPopulationWise );
+        String json = new Gson().toJson(SortingPopulationWise );
+        System.out.println(json);
+        return json;
+    }
 }
 
 
