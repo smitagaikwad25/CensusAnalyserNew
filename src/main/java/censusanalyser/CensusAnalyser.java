@@ -17,13 +17,12 @@ import java.util.stream.Collectors;
 public class CensusAnalyser {
 
     List<IndiaCensusDAO> censusCSVIList = null;
+    List<IndiaStateCodeDAO> StateCodeCSVList = null;
 
     public CensusAnalyser() {
         this.censusCSVIList = new ArrayList<IndiaCensusDAO>();
         this.StateCodeCSVList = new ArrayList<IndiaStateCodeDAO>();
     }
-
-    List<IndiaStateCodeDAO> StateCodeCSVList = null;
 
     public int loadIndiaCensusData(String csvFilePath) throws CensusAnalyserException {
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
@@ -48,13 +47,13 @@ public class CensusAnalyser {
     public int loadIndiaStateCodeData(String csvFilePath) throws CensusAnalyserException {
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
             ICSVBuilder csvBuilder = CsvBuilderFactory.createCSVBuilder();
-           List<IndiaSateCodeCSV> csvList = csvBuilder.getCSVList(reader, IndiaSateCodeCSV.class);
-           int i=0;
-           while (i< csvList.size()){
-               this.StateCodeCSVList.add(new IndiaStateCodeDAO(csvList.get(i)));
-               i++;
-           }
-           return StateCodeCSVList.size();
+            List<IndiaSateCodeCSV> csvList = csvBuilder.getCSVList(reader, IndiaSateCodeCSV.class);
+            int i=0;
+            while (i< csvList.size()){
+                this.StateCodeCSVList.add(new IndiaStateCodeDAO(csvList.get(i)));
+                i++;
+            }
+            return StateCodeCSVList.size();
         } catch (IOException e) {
             throw new CensusAnalyserException(e.getMessage(),
                     CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
@@ -69,30 +68,8 @@ public class CensusAnalyser {
         if (censusCSVIList == null || censusCSVIList.size() == 0){
             throw new CensusAnalyserException("No Census Data",CensusAnalyserException.ExceptionType.No_Census_Data);
         }
-            IndiaCensusDAO temp;
-                for (int i = 0; i < censusCSVIList.size(); i++) {
-                    IndiaCensusDAO input1 = censusCSVIList.get(i);
-                    for (int j = 0; j < censusCSVIList.size() - 1; j++) {
-                        IndiaCensusDAO input2 = censusCSVIList.get(j);
-                        if (input1.state.compareTo(input2.state) < 0) {
-                            temp = censusCSVIList.get(i);
-                            censusCSVIList.set(i,censusCSVIList.get(j));
-                            censusCSVIList.set(j,temp);
-                        }
-                    }
-                }
-                String json = new Gson().toJson(censusCSVIList);
-                System.out.println(json);
-                return json;
-    }
-
-    public String SortSateCode() throws CensusAnalyserException {
-        if (StateCodeCSVList == null || StateCodeCSVList .size() == 0){
-            throw new CensusAnalyserException("No Census Data",CensusAnalyserException.ExceptionType.No_Census_Data);
-        }
-        List<IndiaStateCodeDAO> sortedSatecode = StateCodeCSVList.stream().sorted(Comparator.comparing(IndiaStateCodeDAO::getStateCode)).collect(Collectors.toList());
-        System.out.println(sortedSatecode);
-        String json = new Gson().toJson(sortedSatecode);
+        List<IndiaCensusDAO> SortedCensusOutPut = censusCSVIList.stream().sorted(Comparator.comparing(IndiaCensusDAO::getState)).collect(Collectors.toList());
+        String json = new Gson().toJson(SortedCensusOutPut);
         System.out.println(json);
         return json;
     }
@@ -107,6 +84,19 @@ public class CensusAnalyser {
         System.out.println(json);
         return json;
     }
+
+    public String SortSateCode() throws CensusAnalyserException {
+        if (StateCodeCSVList == null || StateCodeCSVList .size() == 0){
+            throw new CensusAnalyserException("No Census Data",CensusAnalyserException.ExceptionType.No_Census_Data);
+        }
+        List<IndiaStateCodeDAO> sortedSatecode = StateCodeCSVList.stream().sorted(Comparator.comparing(IndiaStateCodeDAO::getStateCode)).collect(Collectors.toList());
+        System.out.println(sortedSatecode);
+        String json = new Gson().toJson(sortedSatecode);
+        System.out.println(json);
+        return json;
+    }
+
+
 }
 
 
