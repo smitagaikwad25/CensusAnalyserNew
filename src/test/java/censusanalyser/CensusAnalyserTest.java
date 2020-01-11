@@ -16,6 +16,7 @@ public class CensusAnalyserTest {
     private static final String INDIA_STATE_CODE_CSV_FILE123 = "./src/test/resources/IndiaSateCode1.csv";
     private static final String EMPTY_CSV_FILE = "./src/test/resources/EmptyCSVFile.csv";
     private static final String EMPTY_STATE_CODE_CSV_FILE = "./src/test/resources/EmptyStateCodeCsv.csv";
+    private static final String US_CENSUS_CSV_FILE_PATH = "./src/test/resources/UsCensusData.csv";
 
     @Test
     public void givenIndianCensusCSVFileReturnsCorrectRecords() {
