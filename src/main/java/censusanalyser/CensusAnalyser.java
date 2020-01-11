@@ -18,10 +18,12 @@ public class CensusAnalyser {
 
     List<IndiaCensusDAO> censusCSVIList = null;
     List<IndiaStateCodeDAO> StateCodeCSVList = null;
+    List<USCensusDAO> UsCensusList = null;
 
     public CensusAnalyser() {
         this.censusCSVIList = new ArrayList<IndiaCensusDAO>();
         this.StateCodeCSVList = new ArrayList<IndiaStateCodeDAO>();
+        this.UsCensusList = new ArrayList<USCensusDAO>();
     }
 
     public int loadIndiaCensusData(String csvFilePath) throws CensusAnalyserException {
@@ -50,6 +52,23 @@ public class CensusAnalyser {
             List<IndiaSateCodeCSV> csvList = csvBuilder.getCSVList(reader, IndiaSateCodeCSV.class);
             csvList.stream().filter(stateCensusData -> StateCodeCSVList.add( new IndiaStateCodeDAO(stateCensusData))).collect(Collectors.toList());
             return StateCodeCSVList.size();
+        } catch (IOException e) {
+            throw new CensusAnalyserException(e.getMessage(),
+                    CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
+        } catch (RuntimeException e) {
+            throw new CensusAnalyserException(e.getMessage(), CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
+        } catch (CSVBuilderException e) {
+            throw new CensusAnalyserException(e.getMessage(), e.type.name());
+        }
+    }
+
+    public int loadUSCensusData(String csvFilePath) throws CensusAnalyserException {
+        try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
+            ICSVBuilder csvBuilder = CsvBuilderFactory.createCSVBuilder();
+            List<UsCensusCSV> uscsvList = csvBuilder.getCSVList(reader,UsCensusCSV.class);
+            uscsvList.stream().filter(UsCensusData -> UsCensusList.add( new USCensusDAO(UsCensusData))).collect(Collectors.toList());
+            System.out.println(UsCensusList);
+            return UsCensusList.size();
         } catch (IOException e) {
             throw new CensusAnalyserException(e.getMessage(),
                     CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
@@ -114,6 +133,8 @@ public class CensusAnalyser {
         System.out.println(json);
         return json;
     }
+
+
 }
 
 
