@@ -140,7 +140,7 @@ public class CensusAnalyserTest {
         String sortedOutput = censusAnalyser.SortDataOfCensunCSv();
         IndiaCensusCSV[] censusCSV = new Gson().fromJson(sortedOutput, IndiaCensusCSV[].class);
         Assert.assertEquals("West Bengal", censusCSV[28].state);
-    } catch (CensusAnalyserException e) {git
+    } catch (CensusAnalyserException e) {
        e.printStackTrace();
     }
     }

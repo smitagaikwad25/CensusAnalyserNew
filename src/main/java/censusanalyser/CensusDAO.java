@@ -44,5 +44,7 @@ public class CensusDAO {
             populationDensity = usCensusCSV.populationDensity;
             areaInSqKm = usCensusCSV.areaInSqKm;
         }
+
+
     }
 
