@@ -140,7 +140,7 @@ public class CensusAnalyserTest {
         String sortedOutput = censusAnalyser.SortDataOfCensunCSv();
         IndiaCensusCSV[] censusCSV = new Gson().fromJson(sortedOutput, IndiaCensusCSV[].class);
         Assert.assertEquals("West Bengal", censusCSV[28].state);
-    } catch (CensusAnalyserException e) {
+    } catch (CensusAnalyserException e) {git
        e.printStackTrace();
     }
     }
@@ -291,7 +291,6 @@ public class CensusAnalyserTest {
         try {
             CensusAnalyser censusAnalyser = new CensusAnalyser();
             int numOfRecords = censusAnalyser.loadUSCensusData(US_CENSUS_CSV_FILE_PATH );
-            System.out.println(numOfRecords);
             Assert.assertEquals(51, numOfRecords);
         } catch (CensusAnalyserException e) {
             e.printStackTrace();
