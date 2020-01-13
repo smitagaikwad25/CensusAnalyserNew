@@ -27,33 +27,12 @@ public class CensusAnalyser {
     }
 
     public int loadIndiaCensusData(String csvFilePath) throws CensusAnalyserException {
-        return this.LoadCensusData(csvFilePath,IndiaCensusCSV.class);
+      censusCSVList = new CensusLoader().LoadCensusData(csvFilePath,IndiaCensusCSV.class);
+     return censusCSVList.size();
     }
-
     public int loadUSCensusData(String csvFilePath) throws CensusAnalyserException {
-        return this.LoadCensusData(csvFilePath,UsCensusCSV.class);
-    }
-
-    public <E> int LoadCensusData(String csvFilePath, Class<E> censusCSV) throws CensusAnalyserException {
-        try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
-            ICSVBuilder csvBuilder = CsvBuilderFactory.createCSVBuilder();
-            List<E> csvList = csvBuilder.getCSVList(reader,censusCSV);
-
-            if (censusCSV.getName().equals("censusanalyser.IndiaCensusCSV")) {
-                csvList.stream().filter(CensusData -> censusCSVList.add(new CensusDAO((IndiaCensusCSV) CensusData))).collect(Collectors.toList());
-            }else  if (censusCSV.getName().equals("censusanalyser.UsCensusCSV")){
-                csvList.stream().filter(CensusData -> censusCSVList.add(new CensusDAO((UsCensusCSV) CensusData))).collect(Collectors.toList());
-            }
-            System.out.println(censusCSVList);
-            return censusCSVList.size();
-        } catch (IOException e) {
-            throw new CensusAnalyserException(e.getMessage(),
-                    CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
-        } catch (RuntimeException e) {
-            throw new CensusAnalyserException(e.getMessage(), CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
-        } catch (CSVBuilderException e) {
-            throw new CensusAnalyserException(e.getMessage(), e.type.name());
-        }
+         censusCSVList = new CensusLoader().LoadCensusData(csvFilePath,UsCensusCSV.class);
+        return censusCSVList.size();
 
     }
 
