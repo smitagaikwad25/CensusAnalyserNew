@@ -3,6 +3,7 @@ package censusanalyser;
 import com.opencsv.bean.CsvBindByName;
 
 public class UsCensusCSV {
+
     @CsvBindByName(column = "StateId", required = true)
     public String stateId;
 
@@ -18,6 +19,9 @@ public class UsCensusCSV {
     @CsvBindByName(column = "PopulationDensity", required = true)
     public float  populationDensity ;
 
+    public String getState() {
+        return state;
+    }
 }
 
 

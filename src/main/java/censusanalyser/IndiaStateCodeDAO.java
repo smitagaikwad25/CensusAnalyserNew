@@ -1,6 +1,7 @@
 package censusanalyser;
 
 public class IndiaStateCodeDAO {
+
     public String StateName ;
     public String StateCode;
 

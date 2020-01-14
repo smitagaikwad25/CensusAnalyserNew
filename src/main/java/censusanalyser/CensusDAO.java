@@ -9,8 +9,11 @@ public class CensusDAO {
         public float areaInSqKm;
         public float  populationDensity ;
 
+        public String getStateId() {
+            return stateId;
+        }
 
-        public int getPopulation() {
+         public int getPopulation() {
             return population;
         }
 
