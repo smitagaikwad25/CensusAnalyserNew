@@ -16,11 +16,27 @@ public class CensusAnalyser {
 
     Map<String,CensusDAO> censusCSVMap = new HashMap<>();
 
-    public int loadIndiaCensusData(String... csvFilePath) throws CensusAnalyserException {
+    public  enum Country{
+        INDIA,US
+    }
+
+    private Country country;
+
+    public <E> int loadCensusData (Country country, String... csvFilePath) throws CensusAnalyserException {
+        if (country.equals(CensusAnalyser.Country.INDIA)) {
+            return this.loadIndiaCensusData(IndiaCensusCSV.class,csvFilePath);
+        } else if (country.equals(CensusAnalyser.Country.US)) {
+            return this.loadUSCensusData(UsCensusCSV.class, csvFilePath);
+        } else {
+            throw new CensusAnalyserException("INCORRECT_COUNTRY", CensusAnalyserException.ExceptionType.INCORRECT_COUNTRY);
+        }
+    }
+
+    public int loadIndiaCensusData(Class csvClass,String... csvFilePath) throws CensusAnalyserException {
       censusCSVMap =  new CensusLoader().LoadCensusData(IndiaCensusCSV.class,csvFilePath);
       return censusCSVMap.size();
     }
-    public int loadUSCensusData(String... csvFilePath) throws CensusAnalyserException {
+    public int loadUSCensusData(Class csvClass,String... csvFilePath) throws CensusAnalyserException {
         censusCSVMap =new CensusLoader().LoadCensusData(UsCensusCSV.class,csvFilePath);
         return censusCSVMap.size();
 
