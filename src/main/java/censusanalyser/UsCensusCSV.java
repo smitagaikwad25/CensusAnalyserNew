@@ -22,6 +22,14 @@ public class UsCensusCSV {
     public String getState() {
         return state;
     }
+
+    public UsCensusCSV(String stateId, String state, int population, float areaInSqKm, float populationDensity) {
+        this.stateId = stateId;
+        this.state = state;
+        this.population = population;
+        this.areaInSqKm = areaInSqKm;
+        this.populationDensity = populationDensity;
+    }
 }
 
 

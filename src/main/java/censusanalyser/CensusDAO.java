@@ -6,36 +6,12 @@ public class CensusDAO {
         public String stateId;
         public int population;
         public int densityPerSqKm;
-        public float areaInSqKm;
+        public int areaInSqKm;
         public float  populationDensity ;
-
-        public String getStateId() {
-            return stateId;
-        }
-
-         public int getPopulation() {
-            return population;
-        }
-
-        public String getState() {
-            return state;
-        }
-
-        public int getDensityPerSqKm() {
-            return densityPerSqKm;
-        }
-
-        public float getAreaInSqKm() {
-            return areaInSqKm;
-        }
-
-        public float getPopulationDensity() {
-            return populationDensity;
-        }
 
         public CensusDAO(IndiaCensusCSV indiaCensusCSV){
             state = indiaCensusCSV.state;
-            areaInSqKm = indiaCensusCSV.areaInSqKm;
+            areaInSqKm = (int) indiaCensusCSV.areaInSqKm;
             densityPerSqKm = indiaCensusCSV.densityPerSqKm;
             population = indiaCensusCSV.population;
         }
@@ -45,9 +21,22 @@ public class CensusDAO {
             stateId = usCensusCSV.stateId;
             population = usCensusCSV.population;
             populationDensity = usCensusCSV.populationDensity;
-            areaInSqKm = usCensusCSV.areaInSqKm;
+            areaInSqKm = (int) usCensusCSV.areaInSqKm;
         }
 
 
+    public Object getCensusDTO(CensusAnalyser.Country country) {
+            if (country.equals(CensusAnalyser.Country.US))
+                return new UsCensusCSV(stateId,state,population,populationDensity,areaInSqKm);
+            return new IndiaCensusCSV(state,areaInSqKm,densityPerSqKm,population);
     }
+}
+
+
+
+
+
+
+
+
 
