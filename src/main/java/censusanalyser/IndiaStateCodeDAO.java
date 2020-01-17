@@ -1,17 +1,12 @@
 package censusanalyser;
 
 public class IndiaStateCodeDAO {
+    public String stateName;
 
-    public String StateName ;
-    public String StateCode;
+    public String stateCode;
 
-    public String getStateCode() {
-        return StateCode;
+    public IndiaStateCodeDAO(String stateName, String stateCode) {
+        this.stateName = stateName;
+        this.stateCode = stateCode;
     }
-
-    public IndiaStateCodeDAO(IndiaSateCodeCSV indiaSateCodeCSV) {
-        StateName = indiaSateCodeCSV.StateName;
-         StateCode = indiaSateCodeCSV.StateCode;
-    }
-
 }

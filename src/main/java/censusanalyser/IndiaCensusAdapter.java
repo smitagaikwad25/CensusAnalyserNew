@@ -27,8 +27,8 @@ public class IndiaCensusAdapter extends CensusAdapter {
             Iterator<IndiaSateCodeCSV> csvIterator = csvBuilder.getCSVIterator(reader, IndiaSateCodeCSV.class);
             Iterable<IndiaSateCodeCSV> csvIterable = () -> csvIterator;
             StreamSupport.stream(csvIterable.spliterator(),false)
-                    .filter(csvState -> censusCsvMap.get(csvState.StateName) != null )
-                    .forEach(csvState ->  censusCsvMap.get(csvState.StateName).stateId = csvState.StateCode);
+                    .filter(csvState -> censusCsvMap.get(csvState.stateName) != null )
+                    .forEach(csvState ->  censusCsvMap.get(csvState.stateName).stateId = csvState.stateCode);
             return  censusCsvMap.size();
         } catch (IOException e) {
             throw new CensusAnalyserException(e.getMessage(),
